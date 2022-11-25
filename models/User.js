@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const thoughtSchema = require('./Thought')
 
 // Schema to create Post model
 const userSchema = new Schema(
@@ -12,19 +13,25 @@ const userSchema = new Schema(
     email: {
       type: String,
       isUnique: true,
-      validate: {
-        validator: function(email) {
-            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value);
-        },
-        message: "That is not a valid email"
-      },
+      // validate: {
+      //   validator: function(email) {
+      //       return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userSchema.email);
+      //   },
+      //   message: "That is not a valid email"
+      // },
       required: true
     },
     thoughts: [
-        thoughtSchema
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Thought'
+        }
     ],
     friends: [
-        userSchema
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User'
+        }
     ]
   },
   {
@@ -35,7 +42,7 @@ const userSchema = new Schema(
   }
 );
 
-postSchema
+userSchema
   .virtual('friendCount')
   .get(function () {
     return this.friends.length;

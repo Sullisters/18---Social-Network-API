@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create Post model
 const thoughtSchema = new Schema(
   {
     thoughtText: {
@@ -21,8 +20,7 @@ const thoughtSchema = new Schema(
     reactions: [
         {
             reactionId: {
-                type: Schema.Types.ObjectId,
-                default: new ObjectId
+                type: Schema.Types.ObjectId
             },
             reactionBody: {
                 type: String,
@@ -37,7 +35,9 @@ const thoughtSchema = new Schema(
                 type: Date,
                 default: Date.now,
                 // GETTER to format the timestamp
-                get: toDateString(createdAt)
+                get: function toDateString(createdAt) {
+                  
+                }
             }
         }
     ]

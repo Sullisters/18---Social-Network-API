@@ -25,11 +25,11 @@ module.exports = {
                     { $addToSet: { users: user._id } },
                     { new: true }
                 );
-                return Reaction.findOneAndUpdate(
-                   { _id: req.body.reactionId },
-                   { $addToSet: { reactions: reaction._id } },
-                   { new: true } 
-                );
+                // return Reaction.findOneAndUpdate(
+                //    { _id: req.body.reactionId },
+                //    { $addToSet: { reactions: reaction._id } },
+                //    { new: true } 
+                // );
             })
             .then((user) =>
                 !user

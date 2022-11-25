@@ -26,4 +26,10 @@ module.exports = {
         .then((post) => res.json(post))
         .catch((err) => res.status(500).json(err))
     },
+    //Create new Reaction
+    createReaction(req, res) {
+        Thought.create(req.body)
+        .then((post) => res.json(post))
+        .catch((err) => res.status(500).json(err))
+    }
 };
