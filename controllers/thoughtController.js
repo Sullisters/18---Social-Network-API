@@ -12,14 +12,25 @@ module.exports = {
         })
     },
     //Retrieve single Thought based on given ID
-    getSingleThought(req, res) {
-        Thought.findOne({ _id: req.params.thoughtId })
-        .then((post) =>
-            !Thought
-                ? res.status(404).json({ message: 'No thought with that ID'})
-                : res.json(thought)
-            )
-            .catch((err) => res.status(500).json(err));
+    // getSingleThought(req, res) {
+    //     Thought.findById(req.params.id)
+    //     .then((post) =>
+    //         !Thought
+    //             ? res.status(404).json({ message: 'No thought with that ID'})
+    //             : res.json(thought)
+    //         )
+    //         .catch((err) => res.status(500).json(err));
+    // },
+    async getSingleThought(req, res) {
+        try {
+            const thought = await Thought.findById(req.params.id)
+            if (!thought) {
+                return res.status(404).json({ message: 'No thought found with that ID'})
+            }
+            return res.status(200).json(thought);
+        } catch(err) {
+            return res.status(500).son(err)
+        }
     },
     //Create new Thought
     createThought(req, res) {
@@ -28,14 +39,19 @@ module.exports = {
         .catch((err) => res.status(500).json(err))
     },
     //Update thought
-    updateThought(req, res) {
-        Thought.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        .then((put) => 
-            !Thought
-                ? res.status(404).json({ message: 'No thought with that ID'})
-                : res.status(thought)
-        )
-        .catch((err) => res.status(500).json(err));
+    async updateThought(req, res) {
+        try {
+            const thought = await Thought.findByIdAndUpdate(
+                req.params.id,
+                req.body,
+                { new: true }
+            )
+            return thought
+                ? res.status(201).json(thought)
+                : res.status(404).json({ message: 'No thought found with that ID'})
+        } catch(err) {
+            return res.status(400).json(err)
+        }
     },
     //Delete thought
     //Could not figure out the syntax without switching to async await
@@ -52,15 +68,16 @@ module.exports = {
     //Create reaction
     async createReaction(req, res) {
         try {
-            Thought.findByIdAndUpdate(
+            const reaction = req.body
+            const thought = await Thought.findByIdAndUpdate(
                 req.params.id,
                 {$addToSet: {reactions: req.body}},
                 { new: true }
-            )    
+            )
             if (thought) {
                 return res.status(202).json(thought);
             } else {
-                return res.status(404).json({ message: 'No thought found with that ID'})
+                return res.status(404).json( {message: 'No thought found with that ID' })
             }
         } catch(err) {
             return res.status(500).json(err)
