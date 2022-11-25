@@ -99,8 +99,8 @@ module.exports = {
             {$addToSet: {friends: req.params.friendId}},
             { new: true }
         )
-        if (user) {
-            return res.status(201).json(user)
+        if (User) {
+            return res.status(201).json(User)
         }
         return res.status(404).json({ message: 'No user found with that ID'})
         .catch((err) => {
