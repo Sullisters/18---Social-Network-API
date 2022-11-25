@@ -1,4 +1,5 @@
-const { Thought, User } = require('../models');
+const {ObjectId} = require('mongoose').Types;
+const { Thought, User, reactionSchema } = require('../models');
 
 module.exports = {
     getUsers(req, res) {
@@ -25,11 +26,6 @@ module.exports = {
                     { $addToSet: { users: user._id } },
                     { new: true }
                 );
-                // return Reaction.findOneAndUpdate(
-                //    { _id: req.body.reactionId },
-                //    { $addToSet: { reactions: reaction._id } },
-                //    { new: true } 
-                // );
             })
             .then((user) =>
                 !user
@@ -40,5 +36,47 @@ module.exports = {
                 console.log(err);
                 res.status(500).json(err);
             })
+    },
+    updateUser(req, res) {
+        User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        )
+        return res.status(201).json(user)
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err)
+        })
+    },
+    addFriend(req, res) {
+        User.findByIdAndUpdate(
+            req.params.userId,
+            {$addToSet: {friends: req.params.friendId}},
+            { new: true }
+        )
+        if (user) {
+            return res.status(201).json(user)
+        }
+        return res.status(404).json({ message: 'No user found with that ID'})
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err)
+        })
+    },
+    deleteFriend(req, res) {
+        User.findByIdAndUpdate(
+            req.params.userId,
+            {$pull: {friends: req.params.friendId}},
+            { new: true }
+        )
+        if (user) {
+            return res.status(201).json(user)
+        } 
+        return res.status(404).json({ message: 'No user found with that ID'})
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err)
+        })
     }
 }
