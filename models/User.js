@@ -1,5 +1,8 @@
 const { Schema, model } = require('mongoose');
 const thoughtSchema = require('./Thought')
+const Mongoose = require('mongoose')
+
+const emailValidator = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 // Schema to create Post model
 const userSchema = new Schema(
@@ -13,12 +16,12 @@ const userSchema = new Schema(
     email: {
       type: String,
       isUnique: true,
-      // validate: {
-      //   validator: function(email) {
-      //       return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userSchema.email);
-      //   },
-      //   message: "That is not a valid email"
-      // },
+      validate: {
+        validator: value => {
+          return emailValidator.test(value)
+        },
+        message: 'Not a valid email address'
+      },
       required: true
     },
     thoughts: [

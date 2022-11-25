@@ -1,4 +1,6 @@
 const { Schema, model } = require('mongoose');
+const Mongoose = require('mongoose')
+const reactionSchema = require('./Reaction')
 
 const thoughtSchema = new Schema(
   {
@@ -11,35 +13,17 @@ const thoughtSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now(),
+      get: value => {
+        return moment(value).local().format('MMM Do YYYY, h:mm:ss a');
+      }
     },
     username: {
       type: String,
       required: true
     },
     reactions: [
-        {
-            reactionId: {
-                type: Schema.Types.ObjectId
-            },
-            reactionBody: {
-                type: String,
-                required: true,
-                maxLength: 280
-            },
-            username: {
-                type: String,
-                required: true
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now,
-                // GETTER to format the timestamp
-                get: function toDateString(createdAt) {
-                  
-                }
-            }
-        }
+        reactionSchema
     ]
   },
   {
